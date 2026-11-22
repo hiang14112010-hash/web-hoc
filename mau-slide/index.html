@@ -1,0 +1,47 @@
+<!doctype html>
+<html lang="vi">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Mẫu slide · Fernora</title>
+<meta name="description" content="Xem trước các mẫu thuyết trình Tạp chí, Phòng thí nghiệm và Sân khấu của Fernora.">
+<link rel="stylesheet" href="gallery.css">
+<script src="gallery.js" defer></script>
+</head>
+<body>
+  <header class="top">
+    <div class="top-inner">
+      <a class="brand" href="../">fernora<span aria-hidden="true">.</span></a>
+      <a class="home" href="../">Trang chủ</a>
+    </div>
+  </header>
+  <main class="shell">
+    <div class="intro">
+      <h1>Mẫu slide</h1>
+      <p>Chọn mẫu rồi xem cách trình bày từ trang mở đầu đến trang kết.</p>
+    </div>
+    <section class="templates" aria-label="Chọn mẫu thuyết trình" id="templates"></section>
+    <section class="viewer" id="viewer" aria-labelledby="deck-name">
+      <header class="viewer-head">
+        <div>
+          <h2 id="deck-name" tabindex="-1"></h2>
+          <p id="deck-subject"></p>
+        </div>
+        <span class="count" id="slide-count" role="status"></span>
+      </header>
+      <div class="screen">
+        <div class="slide-frame" id="slide"></div>
+      </div>
+      <div class="controls" role="group" aria-label="Điều khiển trình chiếu">
+        <button id="previous" class="navigation" type="button">Trang trước</button>
+        <div id="positions" class="positions" role="group" aria-label="Chọn trang"></div>
+        <button id="next" class="navigation" type="button">Trang sau</button>
+      </div>
+    </section>
+    <noscript><p>Bật JavaScript để chọn mẫu và xem từng slide.</p></noscript>
+    <footer class="credits">
+      Ảnh mẫu của <a href="https://unsplash.com/photos/Lq3cQrB63LE">Sven</a> và <a href="https://unsplash.com/photos/Q-DLA9uYn1k">A. C.</a> trên Unsplash.
+    </footer>
+  </main>
+</body>
+</html>
