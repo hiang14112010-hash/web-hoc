@@ -260,6 +260,10 @@
     return [];
   }
 
+  function imageUrl(media) {
+    return (media && (media.localUrl || media.url) || '').trim();
+  }
+
   function collectUniqueImageUrls(template, slides) {
     const urls = [];
     const seen = new Set();
@@ -271,10 +275,10 @@
     };
     for (const slide of slides) {
       const primary = getSlidePrimaryMedia(template, slide);
-      if (primary) add(primary.url);
+      if (primary) add(imageUrl(primary));
       const gallery = getSlideGallery(slide);
       for (const item of gallery) {
-        if (item && item.url) add(item.url);
+        add(imageUrl(item));
       }
     }
     return urls;
@@ -507,7 +511,7 @@
 
   function makePicOrFallback(nextId, media, x, y, cx, cy, relCtx, theme, opts) {
     const o = opts || {};
-    const url = media && media.url ? media.url.trim() : '';
+    const url = imageUrl(media);
     const rel = url ? relCtx.addImage(url) : null;
 
     if (rel) {
@@ -517,16 +521,41 @@
       const lnXml = o.bleed
         ? '<a:ln><a:noFill/></a:ln>'
         : `<a:ln w="9525"><a:solidFill><a:srgbClr val="${theme.border}"/></a:solidFill></a:ln>`;
-      const descr = (media && (media.alt || media.caption)) || o.fallbackLabel || 'Hình minh họa';
+      const descr = [
+        (media && (media.alt || media.caption)) || o.fallbackLabel || 'Hình minh họa',
+        media.credit,
+        media.sourceUrl
+      ].filter(Boolean).join(' · ');
+
+      // Keep diagrams and document scans complete. Crop photos symmetrically
+      // to the frame aspect ratio instead of stretching their proportions.
+      const imageAspect = rel.width / rel.height;
+      const frameAspect = cx / cy;
+      let srcRect = '';
+      if (media.fit === 'contain') {
+        const width = Math.min(cx, cy * imageAspect);
+        const height = Math.min(cy, cx / imageAspect);
+        x += (cx - width) / 2;
+        y += (cy - height) / 2;
+        cx = width;
+        cy = height;
+      } else if (imageAspect > frameAspect) {
+        const crop = Math.round(50000 * (1 - frameAspect / imageAspect));
+        srcRect = `<a:srcRect l="${crop}" r="${crop}"/>`;
+      } else if (imageAspect < frameAspect) {
+        const crop = Math.round(50000 * (1 - imageAspect / frameAspect));
+        srcRect = `<a:srcRect t="${crop}" b="${crop}"/>`;
+      }
       return `
       <p:pic>
         <p:nvPicPr>
           <p:cNvPr id="${id}" name="${xmlEsc(o.name || 'Illustration')}" descr="${xmlEsc(descr)}"/>
-          <p:cNvPicPr><a:picLocks noChangeAspect="0"/></p:cNvPicPr>
+          <p:cNvPicPr><a:picLocks noChangeAspect="1"/></p:cNvPicPr>
           <p:nvPr/>
         </p:nvPicPr>
         <p:blipFill>
           <a:blip r:embed="${rel.rId}"/>
+          ${srcRect}
           <a:stretch><a:fillRect/></a:stretch>
         </p:blipFill>
         <p:spPr>
@@ -887,10 +916,16 @@
         );
       }
       if (hasMedia) {
-        shapes += makePicOrFallback(nextId, media, 8580000, 440000, 2932000, 1740000, relCtx, theme, {
+        shapes += makePicOrFallback(nextId, media, 8580000, 440000, 2932000, 1420000, relCtx, theme, {
           name: 'CaseStudyThumb',
           fallbackLabel: slide.title
         });
+        const cap = formatCaptionLine(media, '');
+        if (cap) {
+          shapes += makeTextBox(nextId(), 'CaseStudyCaption', 8580000, 1870000, 2932000, 490000,
+            makePara(cap, { sz: 800, italic: true, color: theme.muted })
+          );
+        }
       }
 
       const cols = [
@@ -1019,7 +1054,7 @@
         fill: theme.surface, border: theme.border
       });
       const bars = Array.isArray(slide.bars) ? slide.bars : [];
-      const maxVal = Math.max(1, ...bars.map(b => Number(b.val) || 0));
+      const maxVal = Math.max(bars.every(b => b.unit == null || b.unit === '%') ? 100 : 1, ...bars.map(b => Number(b.val) || 0));
       const count = Math.max(1, bars.length);
       const rowH = Math.floor(3800000 / count);
       const trackX = MX + 200000;
@@ -1028,19 +1063,19 @@
       bars.forEach((b, idx) => {
         const y = 2020000 + idx * rowH;
         const val = Number(b.val) || 0;
-        const unit = b.unit || '%';
-        const fillW = Math.max(220000, Math.round((val / maxVal) * trackW));
+        const unit = b.unit ?? '%';
+        const fillW = Math.round(Math.max(0, val) / maxVal * trackW);
         shapes += makeTextBox(nextId(), `BarLabel${idx + 1}`, trackX, y, trackW, 280000,
           makePara(b.label || `Nhóm ${idx + 1}`, { sz: 1150, bold: true, color: theme.ink })
         );
         shapes += makeRect(nextId(), `BarTrack${idx + 1}`, trackX, y + 310000, trackW, Math.min(260000, Math.max(140000, rowH - 440000)), {
           fill: theme.border
         });
-        shapes += makeRect(nextId(), `BarFill${idx + 1}`, trackX, y + 310000, fillW, Math.min(260000, Math.max(140000, rowH - 440000)), {
+        if (fillW > 0) shapes += makeRect(nextId(), `BarFill${idx + 1}`, trackX, y + 310000, fillW, Math.min(260000, Math.max(140000, rowH - 440000)), {
           fill: idx % 2 === 0 ? theme.accent : theme.accent2
         });
         shapes += makeTextBox(nextId(), `BarVal${idx + 1}`, trackX + trackW + 100000, y + 240000, 1000000, 340000,
-          makePara(`${val}${unit}`, { sz: 1250, bold: true, color: theme.accent, algn: 'r' }),
+          makePara(`${val}${unit && unit !== '%' ? ' ' : ''}${unit}`, { sz: 1250, bold: true, color: theme.accent, algn: 'r' }),
           { anchor: 'ctr' }
         );
       });

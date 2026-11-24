@@ -421,6 +421,15 @@
     };
   }
 
+  function renderMediaCredit(media, variant) {
+    if (!media || !media.credit) return '';
+    const credit = esc(media.credit);
+    const source = sanitizeUrl(media.sourceUrl);
+    return variant !== 'thumb' && /^https?:\/\//i.test(source)
+      ? `<a class="sl-media-source" href="${escAttr(source)}" target="_blank" rel="noopener noreferrer">${credit}</a>`
+      : credit;
+  }
+
   /**
    * Renders a resilient editorial media frame with lazy loading, thumbnail/stage
    * resolution switching, object-position focal point, caption/credit bar, and
@@ -434,15 +443,20 @@
     const showCredit = options.showCredit !== false;
     const badgeText = options.fallbackLabel || (media && media.caption) || (template && template.subjectLabel) || 'Minh họa';
 
-    const rawUrl = media ? (variant === 'thumb' ? (media.thumbUrl || media.url) : (media.url || media.thumbUrl)) : '';
+    const rawUrl = media
+      ? (variant === 'thumb'
+        ? media.localThumbUrl || media.thumbUrl || media.localUrl || media.url
+        : media.localUrl || media.url || media.localThumbUrl || media.thumbUrl)
+      : '';
     const src = sanitizeUrl(rawUrl);
     const focal = sanitizeFocalPoint(media && media.focalPoint);
     const alt = escAttr((media && media.alt) || badgeText);
     const cap = (showCaption && media && media.caption) ? esc(media.caption) : '';
-    const credit = (showCredit && media && media.credit) ? esc(media.credit) : '';
+    const credit = showCredit ? renderMediaCredit(media, variant) : '';
+    const fitClass = media && media.fit === 'contain' ? ' is-contained-media' : '';
 
     return `
-      <figure class="sl-media-frame${extraClass}${src ? '' : ' is-fallback'}">
+      <figure class="sl-media-frame${extraClass}${fitClass}${src ? '' : ' is-fallback'}">
         <div class="sl-media-fallback" aria-hidden="true">
           <div class="sl-fallback-grid"></div>
           <div class="sl-fallback-wash"></div>
@@ -618,7 +632,10 @@
           </div>`;
 
       /* ==================== 7. DATA CHART ==================== */
-      case 'data-chart':
+      case 'data-chart': {
+        const bars = sl.bars || [];
+        const max = Math.max(bars.every(b => b.unit == null || b.unit === '%') ? 100 : 1,
+          ...bars.map(b => numVal(b.val, 0)));
         return `
           <div class="sl-inner sl-chart">
             <div class="sl-head-block">
@@ -627,12 +644,12 @@
             </div>
             <div class="sl-chart-body">
               <div class="sl-bars">
-                ${(sl.bars || []).map(b => {
-                  const pct = Math.max(0, Math.min(100, numVal(b.val, 0)));
-                  const unit = b.unit != null ? String(b.unit) : '%';
+                ${bars.map(b => {
+                  const pct = Math.max(0, numVal(b.val, 0)) / max * 100;
+                  const unit = b.unit ?? '%';
                   return `
                     <div class="sl-bar-row">
-                      <div class="sl-bar-top"><span>${esc(b.label)}</span><strong>${esc(b.val)}${esc(unit)}</strong></div>
+                      <div class="sl-bar-top"><span>${esc(b.label)}</span><strong>${esc(b.val)}${unit && unit !== '%' ? ' ' : ''}${esc(unit)}</strong></div>
                       <div class="sl-bar-track"><div class="sl-bar-fill" style="width:${pct}%"></div></div>
                     </div>`;
                 }).join('')}
@@ -646,6 +663,8 @@
             </div>
             ${footer}
           </div>`;
+
+      }
 
       /* ==================== 8. TIMELINE (Connected Axis + Alternating Nodes) ==================== */
       case 'timeline': {
@@ -833,9 +852,9 @@
                 <div class="sl-hero-footrow">
                   <div class="sl-hero-meta">
                     ${(sl.meta || []).map(m => `<span class="sl-hero-chip">${esc(m)}</span>`).join('')}
-                    ${(sl.media && sl.media.caption) ? `<span class="sl-hero-cap">${esc(sl.media.caption)}</span>` : ''}
+                    ${(sl.media && sl.media.caption && sl.media.caption !== sl.title) ? `<span class="sl-hero-cap">${esc(sl.media.caption)}</span>` : ''}
                   </div>
-                  ${(sl.media && sl.media.credit) ? `<span class="sl-hero-credit">${esc(sl.media.credit)}</span>` : ''}
+                  ${(sl.media && sl.media.credit) ? `<span class="sl-hero-credit">${renderMediaCredit(sl.media, variant)}</span>` : ''}
                 </div>
               </div>
             </div>
@@ -852,8 +871,8 @@
             ${renderMediaFrame(sl.media, tpl, { variant, showCaption: false, showCredit: false, fallbackLabel: sl.title })}
             ${((sl.media && (sl.media.caption || sl.media.credit)) || sl.visualCaption) ? `
               <div class="sl-esplit-badge">
-                <div class="sl-esplit-badge-cap">${esc((sl.media && sl.media.caption) || sl.visualCaption || '')}</div>
-                ${(sl.media && sl.media.credit) ? `<div class="sl-esplit-badge-credit">${esc(sl.media.credit)}</div>` : ''}
+                <div class="sl-esplit-badge-cap">${sl.media && sl.media.caption === sl.title ? '' : esc((sl.media && sl.media.caption) || sl.visualCaption || '')}</div>
+                ${(sl.media && sl.media.credit) ? `<div class="sl-esplit-badge-credit">${renderMediaCredit(sl.media, variant)}</div>` : ''}
               </div>` : ''}
           </div>`;
         const textCol = `
@@ -909,7 +928,7 @@
                     <span class="sl-plate-num">${String(idx + 1).padStart(2, '0')}</span>
                     <div class="sl-plate-text">
                       ${plate.caption ? `<div class="sl-plate-cap">${esc(plate.caption)}</div>` : ''}
-                      ${plate.credit ? `<div class="sl-plate-credit">${esc(plate.credit)}</div>` : ''}
+                      ${plate.credit ? `<div class="sl-plate-credit">${renderMediaCredit(plate, variant)}</div>` : ''}
                     </div>
                   </div>
                 </div>`).join('')}
@@ -978,9 +997,9 @@
                       ${renderMotifSVG(tpl.motif, p)}
                       ${sl.visualCaption ? `<div class="sl-vis-cap">${esc(sl.visualCaption)}</div>` : ''}
                     </div>`}
-                <div class="sl-diagram-pins" aria-hidden="true">
+                ${!sl.media ? `<div class="sl-diagram-pins" aria-hidden="true">
                   ${callouts.map((c, idx) => `<span class="sl-diagram-dot dot-${idx + 1}">${esc(c.num || String(idx + 1).padStart(2, '0'))}</span>`).join('')}
-                </div>
+                </div>` : ''}
               </div>
               <div class="sl-callout-list">
                 ${callouts.map((c, idx) => `

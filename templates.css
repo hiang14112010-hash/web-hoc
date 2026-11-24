@@ -1029,6 +1029,25 @@ body.view-templates .templates-view {
   transition: opacity 0.4s ease;
 }
 
+.sl-media-frame.is-contained-media img {
+  object-fit: contain;
+}
+
+.sl-media-frame.is-contained-media.is-loaded .sl-media-fallback {
+  visibility: hidden;
+}
+
+.sl-media-source {
+  color: inherit;
+  text-decoration: underline;
+  text-underline-offset: 0.15em;
+}
+
+.sl-media-source:focus-visible {
+  outline: 0.15em solid currentColor;
+  outline-offset: 0.2em;
+}
+
 .sl-media-frame.is-loaded img {
   opacity: 1;
 }
@@ -2049,6 +2068,7 @@ body.view-templates .templates-view {
 }
 
 .sl-quote-text {
+  white-space: pre-line;
   font-family: 'Be Vietnam Pro', sans-serif;
   font-size: 2.65cqw;
   font-weight: 600;
@@ -2221,7 +2241,7 @@ body.view-templates .templates-view {
   align-items: center;
   justify-content: space-between;
   gap: 2cqw;
-  width: 122%;
+  width: 100%;
 }
 
 .sl-hero-meta {
