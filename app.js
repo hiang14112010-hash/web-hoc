@@ -1,7 +1,7 @@
 /**
  * Fernora Application Controller
  * Coordinates:
- *  - Direct lag-free workspace entry (zero WebGL / hero-scroll hijacking)
+ *  - Lightweight welcome screen and slide library navigation
  *  - Canva-like Template Discovery (Search, Subject Tabs, Purpose Filters, Sort, Favorites)
  *  - Leak-free Hover Slide-Peek with thumbnail image optimization
  *  - Interactive 40+ Slide Morph Previewer (Keyboard-guarded, Filmstrip, Auto-play, Fullscreen)
@@ -109,8 +109,11 @@
     if (countEl) countEl.textContent = String(state.favorites.size);
   }
 
-  // ---------- Direct Workspace Boot & Scroll Helpers ----------
+  // ---------- Home and Workspace Navigation ----------
+  const home = document.getElementById('home');
+  const homeTitle = document.getElementById('home-title');
   const templatesView = document.getElementById('templates-view');
+  const templatesTitle = document.getElementById('templates-title');
   const navTemplates = document.getElementById('nav-templates');
   const navHome = document.getElementById('nav-home');
   const navHowto = document.getElementById('nav-howto');
@@ -121,19 +124,38 @@
   const openAiHeroBtn = document.getElementById('open-ai-hero');
   const howtoStartBtn = document.getElementById('howto-start-btn');
 
+  const workspaceHash = '#mau-slide';
+
+  function setWorkspaceVisible(visible) {
+    document.body.classList.toggle('view-templates', visible);
+    if (templatesView) {
+      templatesView.inert = !visible;
+      templatesView.setAttribute('aria-hidden', String(!visible));
+    }
+    if (home) home.inert = visible;
+    if (navTemplates) navTemplates.classList.toggle('is-active', visible);
+  }
+
   function ensureWorkspaceVisible() {
-    if (window.__fernoraRevealUI) window.__fernoraRevealUI();
-    document.body.classList.add('view-templates');
-    if (templatesView) templatesView.setAttribute('aria-hidden', 'false');
-    if (navTemplates) navTemplates.classList.add('is-active');
+    setWorkspaceVisible(true);
+    if (location.hash !== workspaceHash) history.pushState(null, '', workspaceHash);
   }
 
   function scrollWorkspaceTop() {
     ensureWorkspaceVisible();
-    window.scrollTo({ top: 0, behavior: 'smooth' });
-    if (templatesView && typeof templatesView.scrollTo === 'function') {
-      templatesView.scrollTo({ top: 0, behavior: 'smooth' });
-    }
+    if (templatesView) templatesView.scrollTop = 0;
+    if (templatesTitle) templatesTitle.focus({ preventScroll: true });
+  }
+
+  function showHome() {
+    setWorkspaceVisible(false);
+    if (location.hash !== '#home') history.pushState(null, '', '#home');
+    if (homeTitle) homeTitle.focus({ preventScroll: true });
+  }
+
+  function syncPageLocation() {
+    closeAllModals();
+    setWorkspaceVisible(location.hash === workspaceHash);
   }
 
   // ---------- Modals ----------
@@ -934,7 +956,7 @@
     navHome.addEventListener('click', e => {
       e.preventDefault();
       closeAllModals();
-      scrollWorkspaceTop();
+      showHome();
     });
   }
 
@@ -945,12 +967,43 @@
     });
   }
 
-  if (backToHeroBtn) {
-    backToHeroBtn.addEventListener('click', e => {
-      e.preventDefault();
-      scrollWorkspaceTop();
-    });
+  if (backToHeroBtn) backToHeroBtn.addEventListener('click', showHome);
+
+  function canEnterFromHome() {
+    return !document.body.classList.contains('view-templates') &&
+      !MODAL_STACK_ORDER.some(isModalOpen);
   }
+
+  let wheelDistance = 0;
+  let lastWheelTime = 0;
+  window.addEventListener('wheel', e => {
+    if (e.ctrlKey || !canEnterFromHome()) return;
+    if (e.timeStamp - lastWheelTime > 400 || e.deltaY <= 0) wheelDistance = 0;
+    lastWheelTime = e.timeStamp;
+    if (e.deltaY <= 0 || e.deltaY <= Math.abs(e.deltaX)) return;
+    const scale = e.deltaMode === 0 ? 1 : e.deltaMode === 1 ? 18 : window.innerHeight;
+    wheelDistance += e.deltaY * scale;
+    if (wheelDistance >= 150) {
+      wheelDistance = 0;
+      scrollWorkspaceTop();
+    }
+  }, { passive: true });
+
+  let homeTouch = null;
+  window.addEventListener('touchstart', e => {
+    homeTouch = canEnterFromHome() && e.touches.length === 1 ? e.touches[0] : null;
+  }, { passive: true });
+  window.addEventListener('touchend', e => {
+    const start = homeTouch;
+    homeTouch = null;
+    const end = e.changedTouches[0];
+    if (!start || !end || !canEnterFromHome() || start.identifier !== end.identifier) return;
+    const up = start.clientY - end.clientY;
+    if (up >= 70 && up > Math.abs(start.clientX - end.clientX)) scrollWorkspaceTop();
+  }, { passive: true });
+  window.addEventListener('touchcancel', () => { homeTouch = null; }, { passive: true });
+
+  window.addEventListener('hashchange', syncPageLocation);
 
   if (navHowto) {
     navHowto.addEventListener('click', e => {
@@ -989,7 +1042,7 @@
   }
 
   // ---------- Init ----------
-  ensureWorkspaceVisible();
+  setWorkspaceVisible(location.hash === workspaceHash);
   syncDynamicCounts();
   populateAITemplateSelect();
   saveFavorites();
