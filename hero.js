@@ -1,55 +1,46 @@
 (() => {
-  const loader = document.getElementById('loader');
-  const ui = document.getElementById('ui');
-  const sound = document.getElementById('sound');
-  const go = document.getElementById('go');
-  let introShown = false;
+  'use strict';
 
-  const revealInterface = () => {
-    if (introShown) return;
-    introShown = true;
-    ui.inert = false;
-    ui.classList.add('on');
-    loader.classList.add('gone');
-  };
-  window.__fernoraRevealUI = revealInterface;
-  setTimeout(revealInterface, 2500);
+  // Compatibility shims for app.js (zero WebGL, zero rAF loops)
+  window.__fernoraRevealUI = () => {};
+  window.__fernoraValley = { stopHoverTransition() {} };
 
-  try {
-    // Start the original scene outside its React page.
-    let requireChunk;
-    self.webpackChunk_N_E.push([[90001], {}, require => { requireChunk = require; }]);
-    requireChunk(889);
-    const Valley = window.__GE.et();
-    const audioStore = window.__GE.Y();
-    const valley = new Valley(
-      document.getElementById('valley'),
-      () => loader.classList.add('gone'),
-      revealInterface
-    );
-    window.__fernoraValley = valley;
+  const soundBtn = document.getElementById('sound');
+  let ambientAudio = null;
 
-    sound.disabled = true;
-    audioStore().initAudio().then(() => {
-      sound.disabled = !audioStore().isInitialized;
-    });
-    sound.addEventListener('click', () => {
-      const state = audioStore();
-      if (!state.isInitialized) return;
-      const context = state.audioManager.audioContext;
-      if (state.isMuted && context.state === 'suspended') {
-        context.resume().catch(console.error);
+  if (soundBtn) {
+    soundBtn.addEventListener('click', () => {
+      if (!ambientAudio) {
+        ambientAudio = new Audio('valley/audio/ge-ambient.mp3');
+        ambientAudio.loop = true;
+        ambientAudio.volume = 0.28;
+        ambientAudio.preload = 'auto';
+        ambientAudio.addEventListener('pause', () => {
+          soundBtn.setAttribute('aria-pressed', 'false');
+        });
+        ambientAudio.addEventListener('play', () => {
+          soundBtn.setAttribute('aria-pressed', 'true');
+        });
       }
-      const muted = state.toggleMute();
-      sound.setAttribute('aria-pressed', String(!muted));
-    });
 
-    go.addEventListener('pointerenter', () => valley.startHoverTransition());
-    go.addEventListener('pointerleave', () => valley.stopHoverTransition());
-  } catch (error) {
-    console.error('Unable to start the valley.', error);
-    loader.classList.add('gone');
-    sound.disabled = true;
-    revealInterface();
+      if (ambientAudio.paused) {
+        ambientAudio.play().then(() => {
+          soundBtn.setAttribute('aria-pressed', 'true');
+        }).catch(() => {
+          soundBtn.setAttribute('aria-pressed', 'false');
+        });
+      } else {
+        ambientAudio.pause();
+        soundBtn.setAttribute('aria-pressed', 'false');
+      }
+    });
+  }
+
+  const openHowtoBtn = document.getElementById('open-howto');
+  if (openHowtoBtn) {
+    openHowtoBtn.addEventListener('click', () => {
+      const navHowto = document.getElementById('nav-howto');
+      if (navHowto) navHowto.click();
+    });
   }
 })();
