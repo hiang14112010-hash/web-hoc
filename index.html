@@ -1,353 +1,46 @@
 <!doctype html>
-<html lang="vi">
+<html lang="en">
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
-<title>Fernora — Từ đề bài đến slide học thuật chuẩn Morph</title>
-<meta name="description" content="Nền tảng giúp học sinh tự động tạo bài thuyết trình với AI từ 20 bộ mẫu slide học thuật 40+ trang, hiệu ứng Morph mượt mà và tích hợp chỉnh sửa trên Canva.">
-<link rel="stylesheet" href="style.css?v=8">
-<link rel="stylesheet" href="templates.css?v=7">
+<title>Fernhollow</title>
+<meta name="description" content="A regenerative design studio. Wander through a night valley of flowers that grows as you move.">
+<link rel="stylesheet" href="style.css?v=54802d1497f8">
 </head>
 <body>
-<div class="intro-valley" id="intro-valley" aria-hidden="true">
-  <div class="valley-depth valley-back"></div>
-  <div class="valley-depth valley-mid"></div>
-  <div class="valley-depth valley-front"></div>
-</div>
-
-<!-- Authentic Sparse Botanical Wildflowers (sliced from valley/flowers/pool_summer.png) -->
-<div class="floral-horizon floral-botanical" id="floral-horizon" aria-hidden="true">
-  <div class="floral-mist"></div>
-  <!-- Left Corner Sparse Cluster -->
-  <span class="botanical-sprite sp-l1" style="--c:1; --r:5;"></span>
-  <span class="botanical-sprite sp-l2" style="--c:1; --r:1;"></span>
-  <span class="botanical-sprite sp-l3" style="--c:7; --r:2;"></span>
-  <span class="botanical-sprite sp-l4" style="--c:5; --r:3;"></span>
-  <span class="botanical-sprite sp-l5" style="--c:5; --r:4;"></span>
-  <!-- Right Corner Sparse Cluster -->
-  <span class="botanical-sprite sp-r1" style="--c:7; --r:4;"></span>
-  <span class="botanical-sprite sp-r2" style="--c:4; --r:1;"></span>
-  <span class="botanical-sprite sp-r3" style="--c:5; --r:0;"></span>
-  <span class="botanical-sprite sp-r4" style="--c:4; --r:5;"></span>
-  <span class="botanical-sprite sp-r5" style="--c:6; --r:4;"></span>
-  <!-- Subtle Drifting Night-Valley Dust Motes -->
-  <span class="botanical-mote mote-1"></span>
-  <span class="botanical-mote mote-2"></span>
-  <span class="botanical-mote mote-3"></span>
-  <span class="botanical-mote mote-4"></span>
-  <span class="botanical-mote mote-5"></span>
-  <span class="botanical-mote mote-6"></span>
-  <span class="botanical-mote mote-7"></span>
-</div>
-
-<!-- Persistent Top Navigation (Immediately Interactive) -->
-<div class="ui on" id="ui">
+<div id="valley" aria-hidden="true"><div class="js-canvas-container"></div></div>
+<div class="ui" id="ui" inert>
   <header>
-    <a class="logo" href="#home" id="nav-home" aria-label="fernora">fernora</a>
-    <nav lang="vi" aria-label="Điều hướng chính">
-      <a href="#mau-slide" id="nav-templates">Mẫu slide</a>
-      <a href="#cach-dung" id="nav-howto">Cách dùng</a>
-      <button class="sound" id="sound" type="button" aria-pressed="false" aria-label="Bật hoặc tắt nhạc nền nhẹ">
-        <svg viewBox="0 0 24 24" aria-hidden="true">
-          <path d="M4 9.5v5h3.5L12 18V6L7.5 9.5Z"/>
-          <path class="w" d="M15.5 9a4 4 0 0 1 0 6M18 6.5a7.5 7.5 0 0 1 0 11"/>
-          <path class="x" d="m16 10 4 4m0-4-4 4"/>
-        </svg>
-      </button>
-      <a class="pill" href="#tao-slide" id="nav-create">Tạo slide</a>
-    </nav>
+    <a class="logo" href="#" aria-label="fernora">fernora</a>
+    <nav lang="vi" aria-label="Điều hướng chính"><a href="#">Mẫu slide</a><a href="#">Cách dùng</a><a class="pill" href="#">Tạo slide</a></nav>
   </header>
-  <section class="hero" id="home" aria-labelledby="home-title">
-    <h1 id="home-title" tabindex="-1">Từ đề bài đến slide.</h1>
-    <p class="cap">Nơi ý tưởng dần thành hình.</p>
-    <a class="go" href="#mau-slide" id="go" aria-label="Khám phá kho mẫu slide">
-      <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 12h16M14 6l6 6-6 6"/></svg>
-    </a>
-    <p class="hero-scroll-hint">Cuộn xuống để khám phá mẫu slide</p>
-    <button type="button" class="hero-motion" id="hero-motion" aria-pressed="false" hidden>Tạm dừng chuyển động</button>
+  <section class="hero">
+    <h1 lang="vi">Từ đề bài đến slide.</h1>
+    <p class="cap" lang="vi">Nơi ý tưởng dần thành hình.</p>
+    <a class="go" href="#" id="go" aria-label="See our work"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 12h16M14 6l6 6-6 6"/></svg></a>
   </section>
-</div>
-
-<main class="templates-view" id="templates-view" aria-hidden="true" inert>
-  <div class="templates-shell" id="mau-slide">
-    <div class="tpl-hero-bar">
-      <div>
-        <div class="tpl-eyebrow">Fernora · 20 bộ mẫu học thuật · 856+ slide chuẩn Morph</div>
-        <h2 class="tpl-heading" id="templates-title" tabindex="-1">Kho mẫu slide</h2>
-        <p class="tpl-sub">
-          Mỗi bộ mẫu gồm 40 đến 46 slide thiết kế riêng cho từng môn học, hình ảnh minh họa sống động, hiệu ứng Morph mượt mà và chỉnh sửa trực tiếp trên Canva.
-        </p>
-      </div>
-      <div class="tpl-hero-actions">
-        <button class="btn-cream" id="open-ai-hero" type="button">✦ Tạo bài thuyết trình với AI</button>
-        <button class="btn-glass" id="open-howto" type="button">Cách dùng nhanh</button>
-        <button class="btn-glass" id="back-to-hero" type="button">Về màn hình đầu</button>
-      </div>
-    </div>
-
-    <!-- Canva-like Discovery Dock (Fernora UI) -->
-    <section class="discovery-dock" aria-label="Tìm kiếm và lọc mẫu slide">
-      <div class="search-row">
-        <div class="search-box">
-          <svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="11" cy="11" r="7"/><path d="m20 20-3.5-3.5"/></svg>
-          <input
-            type="search"
-            id="tpl-search"
-            class="search-input"
-            placeholder="Tìm theo môn học, chủ đề, mục đích... (VD: DNA, Giải tích, Lịch sử, Thí nghiệm, AI)"
-            autocomplete="off"
-          >
-          <button type="button" id="tpl-search-clear" class="search-clear" aria-label="Xóa tìm kiếm">×</button>
-        </div>
-
-        <div class="dock-controls">
-          <button type="button" id="fav-filter-btn" class="fav-toggle" aria-pressed="false">
-            ★ Đã lưu (<span id="fav-count">0</span>)
-          </button>
-          <select id="tpl-sort" class="sort-select" aria-label="Sắp xếp mẫu slide">
-            <option value="popular">Phổ biến nhất</option>
-            <option value="slides">Nhiều slide nhất</option>
-            <option value="newest">Mới cập nhật</option>
-            <option value="name">Tên A – Z</option>
-          </select>
-        </div>
-      </div>
-
-      <div class="filter-strip" id="subject-tabs" role="tablist" aria-label="Lọc theo môn học"></div>
-      <div class="filter-strip" id="purpose-tabs" aria-label="Lọc theo mục đích sử dụng"></div>
-    </section>
-
-    <div class="results-meta">
-      <div id="results-summary">Đang hiển thị <strong>20</strong> bộ mẫu slide</div>
-      <div class="quick-tags" id="quick-tags">
-        <button type="button" class="quick-tag" data-query="Thí nghiệm">#Thí nghiệm</button>
-        <button type="button" class="quick-tag" data-query="DNA">#DNA</button>
-        <button type="button" class="quick-tag" data-query="Vũ trụ">#Vũ trụ</button>
-        <button type="button" class="quick-tag" data-query="Việt Nam">#Việt Nam</button>
-        <button type="button" class="quick-tag" data-query="AI">#Trí tuệ nhân tạo</button>
-        <button type="button" class="quick-tag" data-query="Thi ca">#Thi ca</button>
-      </div>
-    </div>
-
-    <section class="templates-grid" id="templates-grid" aria-label="Danh sách mẫu slide"></section>
-  </div>
-</main>
-
-<!-- Modal 1: Interactive 40+ Slide Morph Previewer -->
-<div class="modal-backdrop" id="preview-modal" role="dialog" aria-modal="true" aria-labelledby="preview-title">
-  <div class="modal-panel">
-    <div class="modal-head">
-      <div class="modal-title-group">
-        <h2 id="preview-title">Tên bộ mẫu</h2>
-        <p id="preview-subtitle">Môn học · 42 slides · Hiệu ứng Morph</p>
-      </div>
-      <div class="modal-head-actions">
-        <button type="button" class="btn-cream" id="preview-use-ai">✦ Tạo với AI</button>
-        <button type="button" class="btn-canva" id="preview-open-canva">Mở trên Canva</button>
-        <button type="button" class="modal-close" data-close-modal="preview-modal" aria-label="Đóng">×</button>
-      </div>
-    </div>
-
-    <div class="preview-body">
-      <div class="preview-stage-col">
-        <div class="stage-frame">
-          <div class="slide-canvas" id="morph-stage">
-            <div class="morph-layer" aria-hidden="true">
-              <div class="morph-orb morph-orb-1"></div>
-              <div class="morph-orb morph-orb-2"></div>
-              <div class="morph-frame"></div>
-              <div class="morph-ribbon"></div>
-            </div>
-            <div class="slide-content-layer"></div>
-          </div>
-        </div>
-
-        <div class="stage-toolbar">
-          <div class="stage-nav">
-            <button type="button" class="stage-btn" id="slide-prev">← Trước</button>
-            <span class="slide-counter" id="slide-counter">01 / 42</span>
-            <button type="button" class="stage-btn" id="slide-next">Tiếp →</button>
-          </div>
-          <div class="stage-nav">
-            <button type="button" class="stage-btn is-active" id="toggle-morph" aria-pressed="true">✦ Morph: Bật</button>
-            <button type="button" class="stage-btn" id="toggle-autoplay" aria-pressed="false">▶ Tự chạy</button>
-            <button type="button" class="stage-btn" id="toggle-fullscreen">⛶ Toàn màn hình</button>
-          </div>
-        </div>
-
-        <div class="filmstrip-wrap" id="slide-filmstrip" aria-label="Danh sách toàn bộ slide"></div>
-      </div>
-
-      <aside class="preview-side">
-        <div class="side-block">
-          <h4>Tổng quan thiết kế</h4>
-          <p id="side-desc"></p>
-        </div>
-        <div class="side-block">
-          <h4>Bảng màu (Bấm để sao chép mã Hex)</h4>
-          <div class="swatch-grid" id="side-swatches"></div>
-        </div>
-        <div class="side-block">
-          <h4>Thông số chuẩn giáo viên</h4>
-          <p id="side-specs"></p>
-        </div>
-        <div class="side-stack">
-          <button type="button" class="btn-glass" id="side-download-pptx" style="width:100%">⬇ Tải .pptx nhập vào Canva</button>
-          <button type="button" class="btn-canva" id="side-canva-guide" style="width:100%">Chỉnh sửa tiếp trên Canva →</button>
-        </div>
-      </aside>
-    </div>
+  <div class="corner"><span>Scroll to wander</span><i></i>
+    <button class="sound" id="sound" aria-pressed="false" aria-label="Ambient sound"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 9.5v5h3.5L12 18V6L7.5 9.5Z"/><path class="w" d="M15.5 9a4 4 0 0 1 0 6M18 6.5a7.5 7.5 0 0 1 0 11"/><path class="x" d="m16 10 4 4m0-4-4 4"/></svg></button>
   </div>
 </div>
-
-<!-- Modal 2: AI Presentation Generator Studio -->
-<div class="modal-backdrop" id="ai-modal" role="dialog" aria-modal="true" aria-labelledby="ai-modal-title">
-  <div class="modal-panel modal-panel-narrow">
-    <div class="modal-head">
-      <div class="modal-title-group">
-        <h2 id="ai-modal-title">Tạo bài thuyết trình tự động với AI</h2>
-        <p>Nhập đề bài, chọn mẫu và thông tin — Fernora AI sẽ tự động dựng trọn bộ 40+ slide chuẩn Morph.</p>
-      </div>
-      <button type="button" class="modal-close" data-close-modal="ai-modal" aria-label="Đóng">×</button>
-    </div>
-
-    <form class="modal-scroll-body" id="ai-form">
-      <div class="form-grid">
-        <div class="field field-full">
-          <label for="ai-template-select">1. Bộ mẫu slide đã chọn</label>
-          <select id="ai-template-select" required></select>
-        </div>
-        <div class="field field-full">
-          <label for="ai-prompt">2. Đề bài / Chủ đề bài thuyết trình (Prompt)</label>
-          <textarea id="ai-prompt" required placeholder="VD: Phân tích cấu trúc DNA, quá trình nhân đôi bán bảo tồn và ứng dụng công nghệ chỉnh sửa gene CRISPR trong y học hiện đại..."></textarea>
-        </div>
-        <div class="field">
-          <label for="ai-title">Tiêu đề hiển thị trên bìa</label>
-          <input type="text" id="ai-title" placeholder="VD: Giải mã DNA & Công nghệ Gene">
-        </div>
-        <div class="field">
-          <label for="ai-slide-count">Số lượng slide mục tiêu</label>
-          <select id="ai-slide-count">
-            <option value="40">40 slides (Chuẩn đầy đủ)</option>
-            <option value="44" selected>44 slides (Khuyên dùng)</option>
-            <option value="48">48 slides (Chuyên sâu)</option>
-          </select>
-        </div>
-        <div class="field">
-          <label for="ai-student">Học sinh / Nhóm thực hiện</label>
-          <input type="text" id="ai-student" placeholder="VD: Nhóm 2 — Minh Anh, Gia Huy">
-        </div>
-        <div class="field">
-          <label for="ai-class">Lớp & Trường</label>
-          <input type="text" id="ai-class" placeholder="VD: Lớp 11A2 · THPT Chuyên">
-        </div>
-        <div class="field field-full">
-          <label for="ai-teacher">Giáo viên hướng dẫn</label>
-          <input type="text" id="ai-teacher" placeholder="VD: GVHD: Cô Nguyễn Lan Hương">
-        </div>
-      </div>
-
-      <div class="ai-status" id="ai-status"></div>
-
-      <div style="display:flex;justify-content:flex-end;gap:10px;margin-top:6px;">
-        <button type="button" class="btn-glass" data-close-modal="ai-modal">Hủy</button>
-        <button type="submit" class="btn-cream" id="ai-submit-btn">✦ Tạo bài thuyết trình ngay</button>
-      </div>
-    </form>
-  </div>
-</div>
-
-<!-- Modal 3: Canva Integration Bridge -->
-<div class="modal-backdrop" id="canva-modal" role="dialog" aria-modal="true" aria-labelledby="canva-modal-title">
-  <div class="modal-panel modal-panel-narrow">
-    <div class="modal-head">
-      <div class="modal-title-group">
-        <h2 id="canva-modal-title">Tích hợp & Chỉnh sửa trên Canva</h2>
-        <p id="canva-modal-sub">Đưa toàn bộ 40+ slide kèm bảng màu và hiệu ứng Morph sang Canva chỉ trong 2 bước.</p>
-      </div>
-      <button type="button" class="modal-close" data-close-modal="canva-modal" aria-label="Đóng">×</button>
-    </div>
-
-    <div class="modal-scroll-body">
-      <div class="step-list">
-        <div class="step-card">
-          <div class="step-badge">1</div>
-          <div>
-            <h5>Tải tệp PowerPoint (.pptx) chuẩn Canva</h5>
-            <p>Fernora xuất trọn bộ 40+ slide dưới dạng <code>.pptx</code> có sẵn văn bản chỉnh sửa được, hệ màu riêng của mẫu và siêu dữ liệu chuyển cảnh Morph.</p>
-          </div>
-        </div>
-        <div class="step-card">
-          <div class="step-badge">2</div>
-          <div>
-            <h5>Mở Canva & kéo thả tệp để chỉnh sửa tiếp</h5>
-            <p>Trên Canva, chọn <strong>Tạo thiết kế → Nhập tệp</strong> (hoặc kéo thả file <code>.pptx</code> vừa tải vào trang chủ Canva) để thêm ảnh, sticker và trình chiếu ngay.</p>
-          </div>
-        </div>
-      </div>
-
-      <div class="side-block">
-        <h4>Bảng màu đồng bộ cho Canva Brand Kit (Bấm để sao chép)</h4>
-        <div class="swatch-grid" id="canva-swatches"></div>
-      </div>
-
-      <div style="display:flex;flex-wrap:wrap;gap:10px;justify-content:flex-end;margin-top:6px;">
-        <button type="button" class="btn-cream" id="canva-download-btn">⬇ Tải file .pptx (40+ slide)</button>
-        <a href="https://www.canva.com/create/presentations/" target="_blank" rel="noopener noreferrer" class="btn-canva" id="canva-launch-link">
-          Mở không gian Canva ↗
-        </a>
-      </div>
-    </div>
-  </div>
-</div>
-
-<!-- Modal 4: How It Works (Cách dùng) -->
-<div class="modal-backdrop" id="howto-modal" role="dialog" aria-modal="true" aria-labelledby="howto-title">
-  <div class="modal-panel modal-panel-narrow">
-    <div class="modal-head">
-      <div class="modal-title-group">
-        <h2 id="howto-title">Cách dùng Fernora trong 3 bước</h2>
-        <p>Biến việc làm slide môn học từ nhàm chán thành trải nghiệm sáng tạo trong vài phút.</p>
-      </div>
-      <button type="button" class="modal-close" data-close-modal="howto-modal" aria-label="Đóng">×</button>
-    </div>
-    <div class="modal-scroll-body">
-      <div class="step-list">
-        <div class="step-card">
-          <div class="step-badge">1</div>
-          <div>
-            <h5>Khám phá 20 bộ mẫu theo môn học & mục đích</h5>
-            <p>Lọc nhanh theo 8 môn học (Toán, Lý, Hóa, Sinh, Sử, Địa, Công nghệ, Ngữ văn) hoặc tìm kiếm bằng từ khóa như trên Canva. Mỗi bộ có ít nhất 40 slide chuẩn bố cục.</p>
-          </div>
-        </div>
-        <div class="step-card">
-          <div class="step-badge">2</div>
-          <div>
-            <h5>Nhập đề bài & thông tin để AI tự động dựng bài</h5>
-            <p>Chỉ cần gõ đề bài (prompt), tên học sinh/nhóm, lớp và giáo viên hướng dẫn — AI tự động điền cấu trúc nội dung vào bộ mẫu có sẵn hiệu ứng Morph liên kết mượt mà.</p>
-          </div>
-        </div>
-        <div class="step-card">
-          <div class="step-badge">3</div>
-          <div>
-            <h5>Xem trước Morph trực tiếp & chỉnh sửa trên Canva</h5>
-            <p>Trình chiếu thử toàn bộ 40+ slide ngay trên web hoặc xuất file <code>.pptx</code> một chạm để mở chỉnh sửa chuyên sâu trên Canva.</p>
-          </div>
-        </div>
-      </div>
-      <div style="display:flex;justify-content:flex-end;gap:10px;">
-        <button type="button" class="btn-cream" id="howto-start-btn">Khám phá 20 bộ mẫu ngay →</button>
-      </div>
-    </div>
-  </div>
-</div>
-
-<div class="toast" id="toast" role="status" aria-live="polite"></div>
-
-<script src="templates-data.js?v=6"></script>
-<script src="slide-renderer.js?v=6"></script>
-<script src="pptx-exporter.js?v=6"></script>
-<script src="hero.js?v=8"></script>
-<script src="app.js?v=7"></script>
+<div class="loader" id="loader"><span></span></div>
+<script src="vendor/webpack-a76c04a7ba9aa4ef.js"></script>
+<script src="vendor/fd9d1056-76aadce26f555392.js"></script>
+<script src="vendor/123-3b7f3df3cc5866d7.js"></script>
+<script src="vendor/450-96e2a31dde902aa5.js"></script>
+<script src="vendor/567-6466d5cc81546a43.js"></script>
+<script src="vendor/340-4c85e05b44fc7370.js"></script>
+<script src="vendor/15-91b52fecfdd8e21a.js"></script>
+<script src="vendor/780-35f43a00462f78e8.js"></script>
+<script src="vendor/419-c9aec889e32d9e7b.js"></script>
+<script src="vendor/131-8efcfd03f067c029.js"></script>
+<script src="vendor/layout-681f1a9fe4dd4628.js"></script>
+<script src="vendor/4b5b508e-6dceef0b9f02cb18.js"></script>
+<script src="vendor/8-5234b317a5794281.js"></script>
+<script src="vendor/785-3ec288b614fa287f.js"></script>
+<script src="vendor/b536a0f1-51636bd4ac051d8f.js"></script>
+<script src="vendor/596-40a806be0d0d2bb3.js"></script>
+<script src="vendor/page-4c279de0997d388f.js"></script>
+<script src="hero.js"></script>
 </body>
 </html>

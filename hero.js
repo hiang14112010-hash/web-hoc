@@ -1,56 +1,51 @@
 (() => {
-  'use strict';
+  const loader = document.getElementById('loader');
+  const ui = document.getElementById('ui');
+  const sound = document.getElementById('sound');
+  const go = document.getElementById('go');
+  let introShown = false;
 
-  // Compatibility shims for app.js (zero WebGL, zero rAF loops)
-  window.__fernoraRevealUI = () => {};
-  window.__fernoraValley = { stopHoverTransition() {} };
+  const revealInterface = () => {
+    if (introShown) return;
+    introShown = true;
+    ui.inert = false;
+    ui.classList.add('on');
+  };
 
-  const motionBtn = document.getElementById('hero-motion');
-  const valley = document.getElementById('intro-valley');
-  if (motionBtn && valley) {
-    motionBtn.hidden = false;
-    motionBtn.addEventListener('click', () => {
-      const paused = valley.classList.toggle('is-paused');
-      motionBtn.setAttribute('aria-pressed', String(paused));
+  try {
+    // Start the original scene outside its React page.
+    let requireChunk;
+    self.webpackChunk_N_E.push([[90001], {}, require => { requireChunk = require; }]);
+    requireChunk(889);
+    const Valley = window.__GE.et();
+    const audioStore = window.__GE.Y();
+    const valley = new Valley(
+      document.getElementById('valley'),
+      () => loader.classList.add('gone'),
+      revealInterface
+    );
+
+    sound.disabled = true;
+    audioStore().initAudio().then(() => {
+      sound.disabled = !audioStore().isInitialized;
     });
-  }
-
-  const soundBtn = document.getElementById('sound');
-  let ambientAudio = null;
-
-  if (soundBtn) {
-    soundBtn.addEventListener('click', () => {
-      if (!ambientAudio) {
-        ambientAudio = new Audio('valley/audio/ge-ambient.mp3');
-        ambientAudio.loop = true;
-        ambientAudio.volume = 0.28;
-        ambientAudio.preload = 'auto';
-        ambientAudio.addEventListener('pause', () => {
-          soundBtn.setAttribute('aria-pressed', 'false');
-        });
-        ambientAudio.addEventListener('play', () => {
-          soundBtn.setAttribute('aria-pressed', 'true');
-        });
+    sound.addEventListener('click', () => {
+      const state = audioStore();
+      if (!state.isInitialized) return;
+      const context = state.audioManager.audioContext;
+      if (state.isMuted && context.state === 'suspended') {
+        context.resume().catch(console.error);
       }
-
-      if (ambientAudio.paused) {
-        ambientAudio.play().then(() => {
-          soundBtn.setAttribute('aria-pressed', 'true');
-        }).catch(() => {
-          soundBtn.setAttribute('aria-pressed', 'false');
-        });
-      } else {
-        ambientAudio.pause();
-        soundBtn.setAttribute('aria-pressed', 'false');
-      }
+      const muted = state.toggleMute();
+      sound.setAttribute('aria-pressed', String(!muted));
     });
-  }
 
-  const openHowtoBtn = document.getElementById('open-howto');
-  if (openHowtoBtn) {
-    openHowtoBtn.addEventListener('click', () => {
-      const navHowto = document.getElementById('nav-howto');
-      if (navHowto) navHowto.click();
-    });
+    go.addEventListener('pointerenter', () => valley.startHoverTransition());
+    go.addEventListener('pointerleave', () => valley.stopHoverTransition());
+  } catch (error) {
+    console.error('Unable to start the valley.', error);
+    loader.classList.add('gone');
+    sound.disabled = true;
+    revealInterface();
   }
 })();
