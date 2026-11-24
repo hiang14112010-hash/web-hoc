@@ -92,6 +92,7 @@
   const goBtn = document.getElementById('go');
 
   function showTemplatesView(updateHash = true) {
+    if (window.__fernoraRevealUI) window.__fernoraRevealUI();
     if (state.view === 'templates') return;
     state.view = 'templates';
     document.body.classList.add('view-templates');
@@ -105,6 +106,35 @@
     }
     templatesView.scrollTop = 0;
   }
+
+  // Smooth scroll-down on Hero -> transitions into Templates (bottom floral first, content second)
+  let heroWheelAccum = 0;
+  let heroWheelReset = null;
+  window.addEventListener('wheel', e => {
+    if (document.querySelector('.modal-backdrop.is-open')) return;
+    if (state.view === 'hero' && e.deltaY > 0) {
+      heroWheelAccum += e.deltaY;
+      clearTimeout(heroWheelReset);
+      heroWheelReset = setTimeout(() => { heroWheelAccum = 0; }, 450);
+      if (heroWheelAccum >= 180) {
+        heroWheelAccum = 0;
+        showTemplatesView(true);
+      }
+    }
+  }, { passive: true });
+
+  let touchStartY = null;
+  window.addEventListener('touchstart', e => {
+    if (e.touches.length === 1) touchStartY = e.touches[0].clientY;
+  }, { passive: true });
+  window.addEventListener('touchend', e => {
+    if (touchStartY === null || document.querySelector('.modal-backdrop.is-open')) return;
+    const dy = touchStartY - (e.changedTouches[0]?.clientY ?? touchStartY);
+    touchStartY = null;
+    if (state.view === 'hero' && dy > 70) {
+      showTemplatesView(true);
+    }
+  }, { passive: true });
 
   function showHeroView(updateHash = true) {
     if (state.view === 'hero') return;
