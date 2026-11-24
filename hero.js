@@ -5,6 +5,16 @@
   window.__fernoraRevealUI = () => {};
   window.__fernoraValley = { stopHoverTransition() {} };
 
+  const motionBtn = document.getElementById('hero-motion');
+  const valley = document.getElementById('intro-valley');
+  if (motionBtn && valley) {
+    motionBtn.hidden = false;
+    motionBtn.addEventListener('click', () => {
+      const paused = valley.classList.toggle('is-paused');
+      motionBtn.setAttribute('aria-pressed', String(paused));
+    });
+  }
+
   const soundBtn = document.getElementById('sound');
   let ambientAudio = null;
 
