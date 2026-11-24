@@ -141,7 +141,7 @@ button {
   border: 0;
 }
 
-/* ---------- Persistent Top Bar (Zero-Lag Direct Entry) ---------- */
+/* ---------- Persistent Top Bar ---------- */
 
 .ui {
   position: fixed;
@@ -208,6 +208,72 @@ nav a:not(.pill):hover {
 .pill:hover {
   transform: translateY(-1px);
   background: #fff;
+}
+
+.hero {
+  position: absolute;
+  inset-inline: 18px;
+  top: 49%;
+  transform: translateY(-50%);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+}
+
+.hero h1 {
+  font: 600 clamp(38px, 9vw, 104px)/1.15 'Be Vietnam Pro', Manrope, system-ui, sans-serif;
+  letter-spacing: -0.04em;
+  text-wrap: balance;
+}
+
+.hero .cap {
+  margin-top: clamp(12px, 4vh, 40px);
+  font-size: clamp(16px, 2.2vw, 22px);
+  line-height: 1.4;
+}
+
+.hero .go {
+  display: grid;
+  place-items: center;
+  width: 54px;
+  height: 54px;
+  margin-top: clamp(16px, 3.4vh, 34px);
+  border: 1px solid var(--cream);
+  border-radius: 50%;
+  transition: background 0.25s, color 0.25s;
+}
+
+.hero .go:hover,
+.hero .go:focus-visible {
+  color: #151510;
+  background: var(--cream);
+}
+
+.hero .go svg {
+  width: 22px;
+  height: 22px;
+  fill: none;
+  stroke: currentColor;
+  stroke-width: 1.6;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+
+.hero-scroll-hint {
+  margin-top: 14px;
+  color: rgba(245, 239, 226, 0.74);
+  font-size: 13px;
+}
+
+@media (max-height: 450px) {
+  .hero {
+    top: 55%;
+  }
+
+  .hero h1 {
+    font-size: clamp(32px, 7vw, 60px);
+  }
 }
 
 .sound {

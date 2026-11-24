@@ -5,10 +5,10 @@
 <meta name="viewport" content="width=device-width,initial-scale=1">
 <title>Fernora — Từ đề bài đến slide học thuật chuẩn Morph</title>
 <meta name="description" content="Nền tảng giúp học sinh tự động tạo bài thuyết trình với AI từ 20 bộ mẫu slide học thuật 40+ trang, hiệu ứng Morph mượt mà và tích hợp chỉnh sửa trên Canva.">
-<link rel="stylesheet" href="style.css?v=5">
-<link rel="stylesheet" href="templates.css?v=6">
+<link rel="stylesheet" href="style.css?v=7">
+<link rel="stylesheet" href="templates.css?v=7">
 </head>
-<body class="view-templates">
+<body>
 
 <!-- Authentic Sparse Botanical Wildflowers (sliced from valley/flowers/pool_summer.png) -->
 <div class="floral-horizon floral-botanical" id="floral-horizon" aria-hidden="true">
@@ -38,9 +38,9 @@
 <!-- Persistent Top Navigation (Immediately Interactive) -->
 <div class="ui on" id="ui">
   <header>
-    <a class="logo" href="#mau-slide" id="nav-home" aria-label="fernora">fernora</a>
+    <a class="logo" href="#home" id="nav-home" aria-label="fernora">fernora</a>
     <nav lang="vi" aria-label="Điều hướng chính">
-      <a href="#mau-slide" id="nav-templates" class="is-active">Mẫu slide</a>
+      <a href="#mau-slide" id="nav-templates">Mẫu slide</a>
       <a href="#cach-dung" id="nav-howto">Cách dùng</a>
       <button class="sound" id="sound" type="button" aria-pressed="false" aria-label="Bật hoặc tắt nhạc nền nhẹ">
         <svg viewBox="0 0 24 24" aria-hidden="true">
@@ -52,25 +52,30 @@
       <a class="pill" href="#tao-slide" id="nav-create">Tạo slide</a>
     </nav>
   </header>
-  <!-- Compatibility anchors for app.js -->
-  <a class="sr-only" href="#mau-slide" id="go" tabindex="-1" aria-hidden="true">Khám phá mẫu slide</a>
+  <section class="hero" id="home" aria-labelledby="home-title">
+    <h1 id="home-title" tabindex="-1">Từ đề bài đến slide.</h1>
+    <p class="cap">Nơi ý tưởng dần thành hình.</p>
+    <a class="go" href="#mau-slide" id="go" aria-label="Khám phá kho mẫu slide">
+      <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 12h16M14 6l6 6-6 6"/></svg>
+    </a>
+    <p class="hero-scroll-hint">Cuộn xuống để khám phá mẫu slide</p>
+  </section>
 </div>
 
-<!-- Direct-Entry Fernora Workspace -->
-<main class="templates-view" id="templates-view" aria-hidden="false">
-  <div class="templates-shell">
+<main class="templates-view" id="templates-view" aria-hidden="true" inert>
+  <div class="templates-shell" id="mau-slide">
     <div class="tpl-hero-bar">
       <div>
         <div class="tpl-eyebrow">Fernora · 20 bộ mẫu học thuật · 856+ slide chuẩn Morph</div>
-        <h1 class="tpl-heading">Từ đề bài đến slide.</h1>
+        <h2 class="tpl-heading" id="templates-title" tabindex="-1">Kho mẫu slide</h2>
         <p class="tpl-sub">
-          Nơi ý tưởng dần thành hình — mỗi bộ mẫu gồm 40 đến 46 slide thiết kế riêng cho từng môn học, hình ảnh minh họa sống động, hiệu ứng Morph mượt mà và chỉnh sửa trực tiếp trên Canva.
+          Mỗi bộ mẫu gồm 40 đến 46 slide thiết kế riêng cho từng môn học, hình ảnh minh họa sống động, hiệu ứng Morph mượt mà và chỉnh sửa trực tiếp trên Canva.
         </p>
       </div>
       <div class="tpl-hero-actions">
         <button class="btn-cream" id="open-ai-hero" type="button">✦ Tạo bài thuyết trình với AI</button>
         <button class="btn-glass" id="open-howto" type="button">Cách dùng nhanh</button>
-        <button class="sr-only" id="back-to-hero" type="button" tabindex="-1" aria-hidden="true">Về đầu trang</button>
+        <button class="btn-glass" id="back-to-hero" type="button">Về màn hình đầu</button>
       </div>
     </div>
 
@@ -337,6 +342,6 @@
 <script src="slide-renderer.js?v=6"></script>
 <script src="pptx-exporter.js?v=6"></script>
 <script src="hero.js?v=5"></script>
-<script src="app.js?v=5"></script>
+<script src="app.js?v=7"></script>
 </body>
 </html>

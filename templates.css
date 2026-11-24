@@ -98,11 +98,7 @@ body.view-templates .ui header {
   opacity: 0;
   transform: translateY(42px);
   visibility: hidden;
-  /* Appears AFTER the bottom floral elements rise into place */
-  transition:
-    opacity 0.72s var(--ease-expo) 0.52s,
-    transform 0.88s var(--ease-expo) 0.52s,
-    visibility 0s linear 0.52s;
+  transition: opacity 0.55s var(--ease-expo), transform 0.65s var(--ease-expo);
   scrollbar-width: thin;
   scrollbar-color: rgba(245, 239, 226, 0.22) transparent;
 }
@@ -3238,10 +3234,13 @@ body.view-templates .templates-view {
 
 @media (prefers-reduced-motion: reduce) {
   .templates-view,
+  .ui .hero,
+  .hero .go,
   .morph-orb,
   .morph-frame,
   .morph-ribbon,
   .slide-canvas {
     transition-duration: 0.01ms !important;
+    transition-delay: 0s !important;
   }
 }
