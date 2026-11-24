@@ -24,6 +24,7 @@
       () => loader.classList.add('gone'),
       revealInterface
     );
+    window.__fernoraValley = valley;
 
     sound.disabled = true;
     audioStore().initAudio().then(() => {
