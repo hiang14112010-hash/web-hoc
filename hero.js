@@ -10,7 +10,10 @@
     introShown = true;
     ui.inert = false;
     ui.classList.add('on');
+    loader.classList.add('gone');
   };
+  window.__fernoraRevealUI = revealInterface;
+  setTimeout(revealInterface, 2500);
 
   try {
     // Start the original scene outside its React page.

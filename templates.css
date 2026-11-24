@@ -20,6 +20,7 @@
 /* ---------- Hero <-> Templates Choreographed Transition ---------- */
 
 .ui {
+  z-index: 10;
   transition: opacity 0.85s var(--ease-expo);
 }
 
@@ -32,8 +33,19 @@
 }
 
 .ui header {
-  z-index: 6;
+  z-index: 12;
   transition: background 0.5s ease, backdrop-filter 0.5s ease, border-color 0.5s ease, padding 0.5s var(--ease-expo);
+}
+
+@media (max-width: 820px) {
+  nav {
+    gap: 14px;
+  }
+  nav a#nav-templates {
+    display: inline-flex;
+    font-size: 12px;
+    letter-spacing: 0.08em;
+  }
 }
 
 nav a.is-active {
