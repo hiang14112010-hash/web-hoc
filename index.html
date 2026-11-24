@@ -5,10 +5,15 @@
 <meta name="viewport" content="width=device-width,initial-scale=1">
 <title>Fernora — Từ đề bài đến slide học thuật chuẩn Morph</title>
 <meta name="description" content="Nền tảng giúp học sinh tự động tạo bài thuyết trình với AI từ 20 bộ mẫu slide học thuật 40+ trang, hiệu ứng Morph mượt mà và tích hợp chỉnh sửa trên Canva.">
-<link rel="stylesheet" href="style.css?v=7">
+<link rel="stylesheet" href="style.css?v=8">
 <link rel="stylesheet" href="templates.css?v=7">
 </head>
 <body>
+<div class="intro-valley" id="intro-valley" aria-hidden="true">
+  <div class="valley-depth valley-back"></div>
+  <div class="valley-depth valley-mid"></div>
+  <div class="valley-depth valley-front"></div>
+</div>
 
 <!-- Authentic Sparse Botanical Wildflowers (sliced from valley/flowers/pool_summer.png) -->
 <div class="floral-horizon floral-botanical" id="floral-horizon" aria-hidden="true">
@@ -59,6 +64,7 @@
       <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 12h16M14 6l6 6-6 6"/></svg>
     </a>
     <p class="hero-scroll-hint">Cuộn xuống để khám phá mẫu slide</p>
+    <button type="button" class="hero-motion" id="hero-motion" aria-pressed="false" hidden>Tạm dừng chuyển động</button>
   </section>
 </div>
 
@@ -341,7 +347,7 @@
 <script src="templates-data.js?v=6"></script>
 <script src="slide-renderer.js?v=6"></script>
 <script src="pptx-exporter.js?v=6"></script>
-<script src="hero.js?v=5"></script>
+<script src="hero.js?v=8"></script>
 <script src="app.js?v=7"></script>
 </body>
 </html>

@@ -321,13 +321,89 @@ nav a:not(.pill):hover {
   opacity: 0;
 }
 
-/* Ensure direct-entry workspace stays immediately visible */
-html body #templates-view {
+/* The welcome meadow uses three pre-rendered depths from the local flower atlas. */
+.intro-valley {
+  position: fixed;
+  inset: 0;
+  z-index: 1;
+  overflow: hidden;
+  pointer-events: none;
+  background: #080d0b;
   opacity: 1;
   visibility: visible;
-  pointer-events: auto;
-  transform: none;
-  transition: none;
+  transition: opacity 0.6s ease, visibility 0s;
+}
+
+.intro-valley::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background:
+    radial-gradient(ellipse at 50% 44%, rgba(5, 9, 8, 0.68), transparent 73%),
+    linear-gradient(180deg, rgba(4, 7, 6, 0.31), transparent 32%, transparent 76%, rgba(4, 7, 6, 0.65));
+}
+
+.valley-depth {
+  position: absolute;
+  inset: -12%;
+  background-position: center 56%;
+  background-size: cover;
+  transform: scale(var(--start-scale));
+  animation: valley-glide 11s ease-in-out infinite alternate;
+}
+
+.valley-back {
+  background-image: url('valley/intro/meadow-back.webp');
+  --start-scale: 1;
+  --end-scale: 1.15;
+  --drift: -1.8%;
+  --rise: -0.5%;
+}
+
+.valley-mid {
+  background-image: url('valley/intro/meadow-mid.webp');
+  --start-scale: 1;
+  --end-scale: 1.32;
+  --drift: -3%;
+  --rise: 1%;
+}
+
+.valley-front {
+  background-image: url('valley/intro/meadow-front.webp');
+  --start-scale: 1.05;
+  --end-scale: 1.55;
+  --drift: -5%;
+  --rise: 3%;
+}
+
+@keyframes valley-glide {
+  to { transform: translate(var(--drift), var(--rise)) scale(var(--end-scale)); }
+}
+
+body.view-templates .intro-valley {
+  opacity: 0;
+  visibility: hidden;
+  transition-delay: 0s, 0.6s;
+}
+
+body.view-templates .valley-depth,
+.intro-valley.is-paused .valley-depth {
+  animation-play-state: paused;
+}
+
+.hero-motion {
+  margin-top: 10px;
+  padding: 6px 10px;
+  font-size: 13px;
+  color: var(--cream);
+  text-decoration: underline;
+  text-underline-offset: 0.2em;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .intro-valley { transition: none; }
+  .valley-depth { animation: none; }
+  .hero-motion { display: none; }
 }
 
 /* ---------- Authentic Sparse Bottom Flowers (pool_summer.png 8x7 Sprite Sheet) ---------- */
